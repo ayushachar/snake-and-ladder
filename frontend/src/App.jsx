@@ -4,12 +4,14 @@ import AuthModal from './components/AuthModal';
 import PaymentModal from './components/PaymentModal';
 import RulesModal from './components/RulesModal';
 import GameBoard from './components/GameBoard';
+import TetrisBoard from './components/TetrisBoard';
 import HistoryDashboard from './components/HistoryDashboard';
 import { api } from './services/api';
 
 export default function App() {
     const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState('game'); // 'game' or 'history'
+    const [currentGame, setCurrentGame] = useState('snakes'); // 'snakes' or 'tetris'
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [isPaymentOpen, setIsPaymentOpen] = useState(false);
     const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -58,11 +60,31 @@ export default function App() {
                 {activeTab === 'history' && user ? (
                     <HistoryDashboard user={user} />
                 ) : (
-                    <GameBoard
-                        user={user}
-                        onRequireAuth={() => setIsAuthOpen(true)}
-                        onRequirePayment={() => setIsPaymentOpen(true)}
-                    />
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ maxWidth: '1100px', margin: '0 auto 1.5rem auto', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                            <button
+                                className={currentGame === 'snakes' ? 'btn-primary' : 'btn-secondary'}
+                                onClick={() => setCurrentGame('snakes')}
+                                style={{ padding: '0.6rem 1.5rem', borderRadius: '20px' }}>
+                                🐍 Snakes & Ladders
+                            </button>
+                            <button
+                                className={currentGame === 'tetris' ? 'btn-primary' : 'btn-secondary'}
+                                onClick={() => setCurrentGame('tetris')}
+                                style={{ padding: '0.6rem 1.5rem', borderRadius: '20px' }}>
+                                🧩 Tetris
+                            </button>
+                        </div>
+                        {currentGame === 'snakes' ? (
+                            <GameBoard
+                                user={user}
+                                onRequireAuth={() => setIsAuthOpen(true)}
+                                onRequirePayment={() => setIsPaymentOpen(true)}
+                            />
+                        ) : (
+                            <TetrisBoard />
+                        )}
+                    </div>
                 )}
             </main>
 
